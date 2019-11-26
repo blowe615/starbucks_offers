@@ -80,7 +80,7 @@ def return_figures():
     graph_four.append(
      go.Pie(
      values = member_preds_df['gender'].value_counts(),
-     ids = gender_labels
+     labels = gender_labels
      )
     )
     layout_four = dict(title='Breakdown of Starbucks Rewards Member Genders')
