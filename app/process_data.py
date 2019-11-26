@@ -20,7 +20,7 @@ import plotly.graph_objs as go
 # profile['gender'] = profile['gender'].apply(lambda x: np.nan if x==None else x)
 
 # read in member_preds_df
-member_preds_df = pickle.load(open('pickle_files/member_preds_df.p','rb'))
+member_preds_df = pickle.load(open('../pickle_files/member_preds_df.p','rb'))
 
 def return_figures():
     '''
@@ -39,7 +39,7 @@ def return_figures():
     graph_one.append(
      go.Histogram(
      x = member_preds_df['age'],
-     xbins = range(10,120,10),
+     xbins = dict(start=10,end=120,size=10),
      )
     )
     layout_one = dict(title='Distribution of Starbucks Rewards Member Ages',
@@ -52,7 +52,7 @@ def return_figures():
     graph_two.append(
      go.Histogram(
      x = member_preds_df['income'],
-     xbins = range(0,140000,20000),
+     xbins = dict(start=0,end=140000,size=20000),
      )
     )
     layout_two = dict(title='Distribution of Starbucks Rewards Member Incomes',
@@ -66,7 +66,7 @@ def return_figures():
     graph_three.append(
      go.Histogram(
      x = years,
-     xbins = range(2013,2020),
+     xbins = dict(start=2013,end=2020,size=1),
      )
     )
     layout_three = dict(title='Distribution of Starbucks Rewards Member Enrollment Dates',
