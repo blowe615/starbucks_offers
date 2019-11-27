@@ -44,8 +44,10 @@ def go():
         income = np.nan
     enrollment_date_string = request.args.get('enrollment_date', '')
     if enrollment_date_string == '':
-        enrollment_date_string = '2017-01-01'
-    enrollment_date = datetime.strptime(enrollment_date_string, '%Y-%m-%d')
+        enrollment_date = datetime.today()
+        enrollment_date_string = enrollment_date.strftime('%Y-%m-%d')
+    else:
+        enrollment_date = datetime.strptime(enrollment_date_string, '%Y-%m-%d')
     gender = request.args.get('gender', '')
 
     # load model
