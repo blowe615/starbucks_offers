@@ -3,6 +3,7 @@ import numpy as np
 import pandas as pd
 import pickle
 from datetime import datetime
+from sklearn.model_selection import train_test_split
 from sklearn.preprocessing import MinMaxScaler
 from sklearn.ensemble import BaggingRegressor
 import plotly.graph_objs as go
@@ -114,6 +115,23 @@ def return_reward_figure(preds):
     reward_figure = []
     reward_figure.append(dict(data=graph, layout=layout))
     return reward_figure
+
+def create_train_test_split(df,test_size=0.3):
+    '''
+    Splits a df into input (X) and output (y) arrays, then splits the arrays into training and testing sets
+    Note: since the transaction data is time-based, I will not shuffle the dataset and instead use the older
+    transaction as training data and the more recent transactions as the test data.
+
+    Inputs
+    df (pandas dataframe): the learning_df with 'amount' column as output feature
+    test_size (float): size of the test dataset
+    '''
+    # Split the df into input (X) and output (y) arrays
+    X = df.drop(columns='amount')
+    y = df['amount']
+    # use sklearn's train_test_split
+    X_train, X_test, y_train, y_test = train_test_split(X,y,test_size=test_size,shuffle=False)
+    return X_train, X_test, y_train, y_test
 
 def transform_demographic_data(age,income,enrollment_date,gender):
     '''
