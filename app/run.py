@@ -32,19 +32,29 @@ def index():
 @app.route('/go')
 def go():
     # save user inputs
-    age = request.args.get('age', np.nan)
-    income = request.args.get('income', np.nan)
-    enrollment_date_string = request.args.get('enrollment_date', '2017-01-01')
+    age = request.args.get('age', '')
+    try:
+        float(age)
+    except:
+        age = np.nan
+    income = request.args.get('income', '')
+    try:
+        float(income)
+    except:
+        income = np.nan
+    enrollment_date_string = request.args.get('enrollment_date', '')
+    if enrollment_date_string == '':
+        enrollment_date_string = '2017-01-01'
     enrollment_date = datetime.strptime(enrollment_date_string, '%Y-%m-%d')
     gender = request.args.get('gender', '')
 
-    # # load model
-    # model = pickle.load(open('../pickle_files/model.p','rb'))
-    # # use model to make reward recommendation
-    # preds = make_member_predictions(model,transform_demographic_data(age,income,enrollment_date,gender))
-    # best_reward = np.argmax(preds.flatten())
-    preds=[1,2]
-    best_reward=5
+    # load model
+    model = pickle.load(open('../pickle_files/model.p','rb'))
+    # use model to make reward recommendation
+    preds = make_member_predictions(model,transform_demographic_data(age,income,enrollment_date,gender))
+    best_reward = np.argmax(preds.flatten())
+    # preds=[1,2]
+    # best_reward=5
 
     # This will render the go.html Please see that file.
     return render_template(
