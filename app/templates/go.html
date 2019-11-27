@@ -19,12 +19,12 @@
             <div id="{{id[0]}}"></div>
           </div>
           <div class="col-sm">
-            <ol class="list-group">
+            <ol class="list-group mt-5">
                 {% for idx in range(11) %}
                   {% if idx == best_reward %}
-                    <li class="list-group-item list-group-item-success text-center">{{idx}}</li>
+                    <li class="list-group-item py-2 list-group-item-success text-center">{{idx}}</li>
                   {% else %}
-                    <li class="list-group-item list-group-item-dark text-center">{{idx}}</li>
+                    <li class="list-group-item py-2 list-group-item-dark text-center">{{idx}}</li>
                   {% endif %}
                 {% endfor %}
             </div>
