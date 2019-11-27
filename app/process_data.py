@@ -113,7 +113,7 @@ def return_reward_figure(preds):
      )
     )
     layout = dict(title='Predicted Transaction Amount vs Reward ID',
-                xaxis = dict(title = 'Reward ID'),
+                xaxis = dict(title = 'Reward ID', dtick=1),
                 yaxis = dict(title = 'Reward Adjusted Predicted Transaction Amount (USD)'),
                 height = 550,
                 width = 600,
