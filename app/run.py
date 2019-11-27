@@ -5,7 +5,7 @@ import json, plotly
 from datetime import datetime
 from flask import Flask
 from flask import render_template, request
-from process_data import return_figures, transform_demographic_data, make_member_predictions
+from process_data import return_figures, return_reward_figure, transform_demographic_data, make_member_predictions
 from sklearn.ensemble import BaggingRegressor
 
 app = Flask(__name__)
@@ -58,6 +58,11 @@ def go():
     preds = make_member_predictions(model,transform_demographic_data(age,income,enrollment_date,gender))
     best_reward = np.argmax(preds.flatten()) # identify best reward id
 
+    reward_figure = return_reward_figure(preds) # get the reward_figure based on the preds
+    id = 'figure-0' # create the id for the html id tag
+    # Convert the plotly figures to JSON for javascript in html template
+    figureJSON = json.dumps(reward_figure, cls=plotly.utils.PlotlyJSONEncoder)
+
     # This will render the go.html Please see that file.
     return render_template(
         'go.html',
@@ -66,7 +71,9 @@ def go():
         enrollment_date=enrollment_date_string,
         gender=gender,
         preds=preds,
-        best_reward=best_reward)
+        best_reward=best_reward,
+        id=id,
+        figureJSON=figureJSON)
 
 if __name__ == '__main__':
     app.run(host='0.0.0.0', port=3001, debug=True)
