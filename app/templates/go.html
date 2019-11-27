@@ -22,9 +22,9 @@
             <ol class="list-group mt-5">
                 {% for idx in range(11) %}
                   {% if idx == best_reward %}
-                    <li class="list-group-item py-2 list-group-item-success text-center">{{idx}}</li>
+                    <li class="list-group-item py-2 list-group-item-success text-center">{{reward_dict[idx]}}</li>
                   {% else %}
-                    <li class="list-group-item py-2 list-group-item-dark text-center">{{idx}}</li>
+                    <li class="list-group-item py-2 list-group-item-dark text-center">{{reward_dict[idx]}}</li>
                   {% endif %}
                 {% endfor %}
             </div>

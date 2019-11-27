@@ -63,6 +63,19 @@ def go():
     # Convert the plotly figures to JSON for javascript in html template
     figureJSON = json.dumps(reward_figure, cls=plotly.utils.PlotlyJSONEncoder)
 
+    # create reward_dict for displaying reward descriptions
+    reward_dict = {0:'No reward',
+                    1:'BOGO: $5, 5 days',
+                    2:'BOGO: $5, 7 days',
+                    3:'BOGO: $10, 5 days',
+                    4:'BOGO: $10, 7 days',
+                    5:'Discount: spend $7 get $3, 7 days',
+                    6:'Discount: spend $10 get $2, 7 days',
+                    7:'Discount: spend $10 get $2, 10 days',
+                    8:'Discount: spend $20 get $5, 10 days',
+                    9:'Informational: 3 days',
+                    10:'Informational: 4 days'}
+
     # This will render the go.html Please see that file.
     return render_template(
         'go.html',
@@ -70,10 +83,10 @@ def go():
         income=income,
         enrollment_date=enrollment_date_string,
         gender=gender,
-        preds=preds,
         best_reward=best_reward,
         id=id,
-        figureJSON=figureJSON)
+        figureJSON=figureJSON,
+        reward_dict=reward_dict)
 
 if __name__ == '__main__':
     app.run(host='0.0.0.0', port=3001, debug=True)
