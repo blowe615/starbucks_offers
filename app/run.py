@@ -5,12 +5,33 @@ import json, plotly
 from datetime import datetime
 from flask import Flask
 from flask import render_template, request
-from process_data import return_figures, return_reward_figure, transform_demographic_data, make_member_predictions
+from process_data import return_figures, return_reward_figure, create_train_test_split, transform_demographic_data, make_member_predictions
+from sklearn.model_selection import train_test_split
+from sklearn.preprocessing import MinMaxScaler
 from sklearn.ensemble import BaggingRegressor
 
 app = Flask(__name__)
-
-
+print('Creating model...')
+# load the learning_df
+learning_df = pickle.load(open('../pickle_files/learning_df.p','rb'))
+# use the IQR method identify the upper limit above which values are considered outliers (Q3 + 1.5*IQR)
+Q3 = np.percentile(learning_df['amount'],75)
+Q1 = np.percentile(learning_df['amount'],25)
+IQR = Q3-Q1
+upper_limit = Q3 + 1.5*IQR
+# filter learning_df based on the upper limit
+learning_df_IQR = learning_df.loc[learning_df['amount']<=upper_limit,:]
+# create the training and testing datasets without the outliers
+X_train_IQR, X_test_IQR, y_train_IQR, y_test_IQR = create_train_test_split(learning_df_IQR)
+# load the MinMaxScaler
+scaler = pickle.load(open('../pickle_files/scaler.p','rb'))
+# scale the training data for model
+X_train_IQR = scaler.fit_transform(X_train_IQR)
+# instantiate and fit the BaggingRegressor model
+model = BaggingRegressor(n_estimators=200, max_samples=0.5)
+model.fit(X_train_IQR, y_train_IQR)
+print('Model created!')
+print('Launching web app...')
 # define routes
 @app.route('/')
 @app.route('/index')
@@ -56,8 +77,6 @@ def go():
     if gender == '': # check if gender is blank
         gender = 'None' # if so, set to 'None' (string not object)
 
-    # load model
-    model = pickle.load(open('../pickle_files/model.p','rb'))
     # use model to make reward recommendation
     preds = make_member_predictions(model,transform_demographic_data(age,income,enrollment_date,gender))
     best_reward = np.argmax(preds.flatten()) # identify best reward id
