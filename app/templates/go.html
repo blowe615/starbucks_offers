@@ -4,12 +4,12 @@
 {% block message %}
     <hr />
     <h4 class="text-center">Demographics</h4>
-    <p class="text-center">Age:{{age}}, Income:{{income}}, Enrollment date:{{enrollment_date}}, Gender:{{gender}}</p>
+    <p class="text-center">Age: {{age}}, Income: {{income}}, Enrollment date: {{enrollment_date}}, Gender: {{gender}}</p>
 {% endblock %}
 
 {% block content %}
     <h1 class="text-center">Recommendation</h1>
         <p class="text-center">
-          {% 'The best reward is Reward {}'.format(best_reward) %}
+          {{best_reward}}
         </p>
 {% endblock %}

@@ -68,12 +68,14 @@
     </div>
   </div>
 </form>
+{% block message %}
+{% endblock %}
 </div>
 </div>
 
 <!--demographic info-->
 <div id="demographic-info" class="mt-3">
-
+  {% block content %}
     <h2 class="text-center" id="tag-line">Starbucks Reward Member Demographics</h2>
     <!--<h4 id="tag-line" class="text-muted">Top 10 World Economies Land Use</h4>-->
 
@@ -114,7 +116,7 @@
 
 </body>
 
-
+{% endblock %}
 <footer>
 
     <script type="text/javascript">

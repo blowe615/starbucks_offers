@@ -155,11 +155,11 @@ def make_member_predictions(model, member_inputs):
     reward = np.insert(reward,0,0) # insert a reward of 0 at the beginning for Reward 0 (no offer)
     difficulty = portfolio_encoded['difficulty'].values # extract difficulty values from portfolio_encoded (minimum spend)
     difficulty = np.insert(difficulty, 0, 0) # insert a difficulty of 0 at the beginning for Reward 0 (no offer)
-    # inputs = np.copy(member_inputs) # create a copy to avoid changing the original inputs
+    member_inputs = member_inputs.flatten() # flatten member_inputs into a 1D array
     member_preds = np.zeros((member_inputs.shape[0],11)) # initialize array to store member predictions
     member_inputs[:10] = 0 # reset the reward booleans to 0 so that only 1 reward is active at a time
     for idx in range(11): # loop through each reward_id (0 through 10)
-        inputs[idx]=1 # set the reward_id boolean to 1 (True)
+        member_inputs[idx]=1 # set the reward_id boolean to 1 (True)
         # append the prediction to the member_preds array
         member_preds[idx] = model.predict(member_inputs.reshape(1,17))
         member_inputs[idx]=0 # set the reward_id back to 0

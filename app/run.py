@@ -4,7 +4,7 @@ import pickle
 import json, plotly
 from datetime import datetime
 from flask import Flask
-from flask import render_template
+from flask import render_template, request
 from process_data import return_figures, transform_demographic_data, make_member_predictions
 from sklearn.ensemble import BaggingRegressor
 
@@ -32,19 +32,18 @@ def index():
 @app.route('/go')
 def go():
     # save user inputs
-    # query = request.args.get('query', '')
     age = request.args.get('age', np.nan)
     income = request.args.get('income', np.nan)
     enrollment_date = request.args.get('enrollment_date', datetime(2017,1,1))
     gender = request.args.get('gender', '')
 
-    # load model
-    model = pickle.load(open('../pickle_files/model.p','rb'))
-    # use model to make reward recommendation
-    preds = make_member_predictions(model,transform_demographic_data(age,income,enrollment_date,gender))
-    best_reward = np.argmax(preds.flatten())
-    # classification_labels = model.predict([query])[0]
-    # classification_results = dict(zip(df.columns[4:], classification_labels))
+    # # load model
+    # model = pickle.load(open('../pickle_files/model.p','rb'))
+    # # use model to make reward recommendation
+    # preds = make_member_predictions(model,transform_demographic_data(age,income,enrollment_date,gender))
+    # best_reward = np.argmax(preds.flatten())
+    preds=[1,2]
+    best_reward=5
 
     # This will render the go.html Please see that file.
     return render_template(
@@ -53,9 +52,7 @@ def go():
         income=income,
         enrollment_date=enrollment_date,
         gender=gender,
-        preds=preds,
-        best_reward=best_reward
-    )
+        )
 
 if __name__ == '__main__':
     app.run(host='0.0.0.0', port=3001, debug=True)
