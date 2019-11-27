@@ -39,7 +39,6 @@ File containing the jupyter notebook in which I performed my investigations and 
 All of the pickle files that I saved to be used either in the web app or to save time when re-running `starbucks_offers.ipynb`.
 * `learning_df.p`: Pandas DataFrame containing only the features to be used in training and testing ML models (input variables and output variable).
 * `member_preds_df.p`: Pandas DataFrame containing member demographic data from `profile` data set along with the reward recommended for each member.  Used in plotting results in `starbucks_offers.ipynb` and in demographic distributions for the web app.
-* `model.p`: Tuned scikit-learn Bagging Regressor model trained on the training subset of the `learning_df` DataFrame.
 * `portfolio_encoded.p`: Pandas DataFrame containing the encoded values of the `portfolio` data set.
 * `scaler.p`: Scikit-learn MinMaxScaler object fit to the training data from `learning_df`.  Used to scale the user inputs in the web app.
 * `transactions_encoded.p`: Pandas DataFrame containing the encoded features of the `transcript` data set for only transaction events.  Used to avoid having to re-encode the DataFrame every time the Jupyter notebook was rerun.
