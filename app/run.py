@@ -32,16 +32,20 @@ def index():
 @app.route('/go')
 def go():
     # save user inputs
-    age = request.args.get('age', '')
+    age_string = request.args.get('age', '')
     try: # check if age is a float or int
-        float(age)
+        age = float(age_string)
+        age_string = age_string + ' years'
     except: # if not, set to NaN
         age = np.nan
-    income = request.args.get('income', '')
+        age_string = '54.39 years'
+    income_string = request.args.get('income', '')
     try: # check if income is a float or int
-        float(income)
+        income = float(income_string)
+        income_string = '$' + income_string
     except: # if not, set to NaN
         income = np.nan
+        income_string = '$65405'
     enrollment_date_string = request.args.get('enrollment_date', '')
     if enrollment_date_string == '': # check if enrollment date is blank
         enrollment_date = datetime.today() # if so, set to today
@@ -79,8 +83,8 @@ def go():
     # This will render the go.html Please see that file.
     return render_template(
         'go.html',
-        age=age,
-        income=income,
+        age=age_string,
+        income=income_string,
         enrollment_date=enrollment_date_string,
         gender=gender,
         best_reward=best_reward,
