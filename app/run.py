@@ -1,11 +1,12 @@
 # import libraries
 import numpy as np
+import pickle
 import json, plotly
 from datetime import datetime
 from flask import Flask
 from flask import render_template
-from process_data import return_figures
-
+from process_data import return_figures, transform_demographic_data, make_member_predictions
+from sklearn.ensemble import BaggingRegressor
 
 app = Flask(__name__)
 
@@ -27,8 +28,8 @@ def index():
                            ids=ids,
                            figuresJSON=figuresJSON)
 
-# web page that handles user query and displays model results
-# @app.route('/go')
+# web page that handles user inputs of demographic data and displays model results and reward recommendation
+@app.route('/go')
 def go():
     # save user inputs
     # query = request.args.get('query', '')
@@ -37,17 +38,23 @@ def go():
     enrollment_date = request.args.get('enrollment_date', datetime(2017,1,1))
     gender = request.args.get('gender', '')
 
-    # use model to predict classification for query
-    classification_labels = model.predict([query])[0]
-    classification_results = dict(zip(df.columns[4:], classification_labels))
+    # load model
+    model = pickle.load(open('../pickle_files/model.p','rb'))
+    # use model to make reward recommendation
+    preds = make_member_predictions(model,transform_demographic_data(age,income,enrollment_date,gender))
+    best_reward = np.argmax(preds.flatten())
+    # classification_labels = model.predict([query])[0]
+    # classification_results = dict(zip(df.columns[4:], classification_labels))
 
     # This will render the go.html Please see that file.
     return render_template(
         'go.html',
-        query=query,
-        classification_result=classification_results
+        age=age,
+        income=income,
+        enrollment_date=enrollment_date,
+        gender=gender,
+        preds=preds
     )
-# go
 
 if __name__ == '__main__':
     app.run(host='0.0.0.0', port=3001, debug=True)
