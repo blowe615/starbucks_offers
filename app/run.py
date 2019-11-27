@@ -34,7 +34,8 @@ def go():
     # save user inputs
     age = request.args.get('age', np.nan)
     income = request.args.get('income', np.nan)
-    enrollment_date = request.args.get('enrollment_date', datetime(2017,1,1))
+    enrollment_date_string = request.args.get('enrollment_date', '2017-01-01')
+    enrollment_date = datetime.strptime(enrollment_date_string, '%Y-%m-%d')
     gender = request.args.get('gender', '')
 
     # # load model
@@ -50,9 +51,10 @@ def go():
         'go.html',
         age=age,
         income=income,
-        enrollment_date=enrollment_date,
+        enrollment_date=enrollment_date_string,
         gender=gender,
-        )
+        preds=preds,
+        best_reward=best_reward)
 
 if __name__ == '__main__':
     app.run(host='0.0.0.0', port=3001, debug=True)
