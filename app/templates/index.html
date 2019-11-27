@@ -56,27 +56,16 @@
       <input type="text" class="form-control" name="income" placeholder="Income">
     </div>
     <div class="col-auto">
-        <div class='input-group date' id='datetimepicker1' >
-            <input type='date' class="form-control" name="enrollment_date" placeholder="Enrollment Date"/>
-            <span class="input-group-addon">
-                <span class="glyphicon glyphicon-time"></span>
-            </span>
-        </div>
-      </div>
-        <script type="text/javascript">
-            $(function () {
-                $('#datetimepicker').datetimepicker();
-            });
-        </script>
-      <div class="col-auto">
-        <label class="radio-inline pl-1"><input type="radio" name="gender" value="Male"> Male</label>
-        <label class="radio-inline pl-1"><input type="radio" name="gender" value="Female"> Female</label>
-        <label class="radio-inline pl-1"><input type="radio" name="gender" value="Other"> Other</label>
-
-      </div>
-      <div class = "col-auto">
-        <button type="submit" class="btn btn-primary">Submit</button>
-      </div>
+      <input class="form-control" type='date' name="enrollment_date" id="enrollment_date" placeholder="Enrollment Date"/>
+    </div>
+    <div class="col-auto">
+      <label class="radio-inline pl-1"><input type="radio" name="gender" value="Male"> Male</label>
+      <label class="radio-inline pl-1"><input type="radio" name="gender" value="Female"> Female</label>
+      <label class="radio-inline pl-1"><input type="radio" name="gender" value="Other"> Other</label>
+    </div>
+    <div class = "col-auto">
+      <button type="submit" class="btn btn-primary">Submit</button>
+    </div>
   </div>
 </form>
 </div>
