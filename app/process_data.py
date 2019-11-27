@@ -19,14 +19,15 @@ import plotly.graph_objs as go
 # # Map 'None' to NaN in 'gender column'
 # profile['gender'] = profile['gender'].apply(lambda x: np.nan if x==None else x)
 
-# read in member_preds_df
+# load member_preds_df
 member_preds_df = pickle.load(open('../pickle_files/member_preds_df.p','rb'))
+
+# load MinMaxScaler
+scaler = pickle.load(open('../pickle_files/scaler.p','rb'))
 
 def return_figures():
     '''
-    Creates 9 plotly visualizations:
-    - 4 visualizations of the demographic data
-    - 5 visualizations showing the frequency of offer recommendations by demographic
+    Creates 4 plotly visualizations of the demographic data
 
     Inputs:
     None
@@ -93,3 +94,41 @@ def return_figures():
     figures.append(dict(data=graph_four, layout=layout_four))
 
     return figures
+
+def transform_demographic_data(age,income,enrollment_date,gender):
+    '''
+    Take raw demographic data (age, income, enrollment date, gender) and transform it:
+    - convert date to timestamp, encode gender, scale all values
+    - add 11 zeros in front of data to create input array for `make_member_predictions`
+
+    Inputs:
+    age (int or float): member age in years or NaN if age is unknown (if unknown will use mean age)
+    income (float): member annual income in USD or NaN if unknown (if unknown will use mean income)
+    enrollment_date (datetime object): the date (mm-dd-YYYY) that a member enrolled
+    gender (string): 'F','M','O', or 'U' (for unknown)
+
+    Returns:
+    member_inputs (1x17 array): normalized array containing values for:
+    reward_ids (0-10), age, income, enrollment date, and genders (F,M,O)
+    '''
+    mean_age = member_preds_df['age'].mean() # calculate the mean age from the dataset (used to replace nulls)
+    mean_income = member_preds_df['income'].mean() # calculate mean income from the dataset (used to replace nulls)
+    if pd.isnull(age):
+        age = mean_age # if age is null, replace with mean age
+    if pd.isnull(income):
+        income=mean_income # if income is null, replace with mean income
+    tstamp = enrollment_date.timestamp() # convert enrollment date from datetime object to timestamp (for scaling)
+    # create the gender encoding array based on the gender provided (if any)
+    if gender == 'Female':
+        gen_array = np.array([1,0,0])
+    elif gender == 'Male':
+        gen_array = np.array([0,1,0])
+    elif gender == 'Other':
+        gen_array = np.array([0,0,1])
+    else:
+        gen_array = np.array([0,0,0])
+    member_inputs_raw = np.zeros((1,17)) # create 1x17 array of zeros to initialize the member inputs
+    member_inputs_raw[0,11:14] = [age, income, tstamp] # replace elements 11-13 with the age, income and tstamp
+    member_inputs_raw[0,14:] = gen_array # replace the last 3 elements with the gender encoding array
+    member_inputs = scaler.transform(member_inputs_raw) # scale the inputs using the MinMaxScaler
+    return member_inputs.reshape(1,17) # return the inputs in a 1x17 array
