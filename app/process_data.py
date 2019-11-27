@@ -7,15 +7,6 @@ from sklearn.preprocessing import MinMaxScaler
 from sklearn.ensemble import BaggingRegressor
 import plotly.graph_objs as go
 
-# # read in profile dataset
-# profile = pd.read_json('../data/profile.json',orient='records',lines=True)
-#
-# # Map 118 to NaN in 'Age' column
-# profile['age'] = profile['age'].apply(lambda x: np.nan if x==118 else x)
-#
-# # Map 'None' to NaN in 'gender column'
-# profile['gender'] = profile['gender'].apply(lambda x: np.nan if x==None else x)
-
 # load member_preds_df
 member_preds_df = pickle.load(open('../pickle_files/member_preds_df.p','rb'))
 
@@ -44,7 +35,7 @@ def return_figures():
      )
     )
     layout_one = dict(title='Distribution of Starbucks Rewards Member Ages',
-                xaxis = dict(title = 'Age (years)'),
+                xaxis = dict(title = 'Age (years)', dtick=10, ticklen=5),
                 yaxis = dict(title = 'Count')
                 )
 
@@ -57,7 +48,7 @@ def return_figures():
      )
     )
     layout_two = dict(title='Distribution of Starbucks Rewards Member Incomes',
-                xaxis = dict(title = 'Income (USD)'),
+                xaxis = dict(title = 'Income (USD)',dtick=20000, ticklen=5),
                 yaxis = dict(title = 'Count')
                 )
 
@@ -71,7 +62,7 @@ def return_figures():
      )
     )
     layout_three = dict(title='Distribution of Starbucks Rewards Member Enrollment Dates',
-                xaxis = dict(title = 'Enrollment Year'),
+                xaxis = dict(title = 'Enrollment Year',dtick=1), ticklen=5,
                 yaxis = dict(title = 'Count')
                 )
 
