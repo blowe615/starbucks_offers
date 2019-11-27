@@ -2,9 +2,6 @@
 import numpy as np
 import pandas as pd
 import pickle
-import matplotlib.pyplot as plt
-import matplotlib.patches as mpatches
-from matplotlib.legend_handler import HandlerTuple
 from datetime import datetime
 from sklearn.preprocessing import MinMaxScaler
 from sklearn.ensemble import BaggingRegressor
@@ -97,6 +94,32 @@ def return_figures():
     figures.append(dict(data=graph_four, layout=layout_four))
 
     return figures
+
+def return_reward_figure(preds):
+    '''
+    Creates a bar chart with the predicted transaction amounts for each reward type
+
+    Inputs:
+    preds (1D array): predicted transaction amounts for Rewards 0-10
+
+    Returns:
+    reward_figure (list of 1 dict): list containing one dictionary with data and layout of reward chart
+    '''
+    graph = []
+    graph.append(
+     go.Bar(
+     x = range(11),
+     y = preds
+     )
+    )
+    layout = dict(title='Predicted Transaction Amount vs Reward ID',
+                xaxis = dict(title = 'Reward ID'),
+                yaxis = dict(title = 'Reward Adjusted Predicted Transaction Amount (USD)')
+                )
+
+    reward_figure = []
+    reward_figure.append(dict(data=graph, layout=layout))
+    return reward_figure
 
 def transform_demographic_data(age,income,enrollment_date,gender):
     '''
