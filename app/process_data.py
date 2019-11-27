@@ -174,7 +174,7 @@ def make_member_predictions(model, member_inputs):
     difficulty = np.insert(difficulty, 0, 0) # insert a difficulty of 0 at the beginning for Reward 0 (no offer)
     member_inputs = member_inputs.flatten() # flatten member_inputs into a 1D array
     member_preds = np.zeros(11) # initialize array to store member predictions
-    member_inputs[:10] = 0 # reset the reward booleans to 0 so that only 1 reward is active at a time
+    member_inputs[:11] = 0 # reset the reward booleans to 0 so that only 1 reward is active at a time
     for idx in range(11): # loop through each reward_id (0 through 10)
         member_inputs[idx]=1 # set the reward_id boolean to 1 (True)
         # append the prediction to the member_preds array
