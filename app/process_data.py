@@ -25,6 +25,9 @@ member_preds_df = pickle.load(open('../pickle_files/member_preds_df.p','rb'))
 # load MinMaxScaler
 scaler = pickle.load(open('../pickle_files/scaler.p','rb'))
 
+# load portfolio_encoded
+portfolio_encoded = pickle.load(open('../pickle_files/portfolio_encoded.p','rb'))
+
 def return_figures():
     '''
     Creates 4 plotly visualizations of the demographic data
@@ -132,3 +135,36 @@ def transform_demographic_data(age,income,enrollment_date,gender):
     member_inputs_raw[0,14:] = gen_array # replace the last 3 elements with the gender encoding array
     member_inputs = scaler.transform(member_inputs_raw) # scale the inputs using the MinMaxScaler
     return member_inputs.reshape(1,17) # return the inputs in a 1x17 array
+
+def make_member_predictions(model, member_inputs):
+    '''
+    Makes predictions for the amount a member will spend based on each of the 10 reward offers or no reward offer
+    Deducts the reward amount if the predicted amount is greater than the difficulty to complete the reward
+
+    Inputs:
+    model: an sklearn model fit to training data
+    member_inputs (2D array): normalized values for the input features with shape (# members, 17 features)
+        the features (columns) must be in this order: 0, 1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 'age','income',
+                                                     'enrollment_tstamp','gender_F','gender_M','gender_O'
+
+    Returns:
+    reward_adjusted_preds (2D array): the reward_adjusted predicted transaction amounts for the 11 reward options (no reward + 10 reward types)
+    - shape (# members, 11 columns)
+    '''
+    reward = portfolio_encoded['reward'].values # extract reward values from portfolio_encoded
+    reward = np.insert(reward,0,0) # insert a reward of 0 at the beginning for Reward 0 (no offer)
+    difficulty = portfolio_encoded['difficulty'].values # extract difficulty values from portfolio_encoded (minimum spend)
+    difficulty = np.insert(difficulty, 0, 0) # insert a difficulty of 0 at the beginning for Reward 0 (no offer)
+    # inputs = np.copy(member_inputs) # create a copy to avoid changing the original inputs
+    member_preds = np.zeros((member_inputs.shape[0],11)) # initialize array to store member predictions
+    member_inputs[:10] = 0 # reset the reward booleans to 0 so that only 1 reward is active at a time
+    for idx in range(11): # loop through each reward_id (0 through 10)
+        inputs[idx]=1 # set the reward_id boolean to 1 (True)
+        # append the prediction to the member_preds array
+        member_preds[idx] = model.predict(member_inputs.reshape(1,17))
+        member_inputs[idx]=0 # set the reward_id back to 0
+    # create an boolean array to determine if the predicted transaction is greater than the difficulty for each reward
+    offer_met = np.greater_equal(member_preds,difficulty)
+    # subtract the reward amount from the predicted transactions if the offer is met
+    reward_adjusted_preds = np.subtract(member_preds, reward, out=member_preds, where=offer_met)
+    return reward_adjusted_preds
