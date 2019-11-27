@@ -53,7 +53,8 @@ def go():
         income=income,
         enrollment_date=enrollment_date,
         gender=gender,
-        preds=preds
+        preds=preds,
+        best_reward=best_reward
     )
 
 if __name__ == '__main__':
