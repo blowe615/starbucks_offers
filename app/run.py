@@ -16,7 +16,7 @@ app = Flask(__name__)
 @app.route('/index')
 def index():
 
-    figures = return_figures()
+    figures = return_figures() # get the list of demographic figures
 
     # plot ids for the html id tag
     ids = ['figure-{}'.format(i) for i, _ in enumerate(figures)]
@@ -33,30 +33,30 @@ def index():
 def go():
     # save user inputs
     age = request.args.get('age', '')
-    try:
+    try: # check if age is a float or int
         float(age)
-    except:
+    except: # if not, set to NaN
         age = np.nan
     income = request.args.get('income', '')
-    try:
+    try: # check if income is a float or int
         float(income)
-    except:
+    except: # if not, set to NaN
         income = np.nan
     enrollment_date_string = request.args.get('enrollment_date', '')
-    if enrollment_date_string == '':
-        enrollment_date = datetime.today()
+    if enrollment_date_string == '': # check if enrollment date is blank
+        enrollment_date = datetime.today() # if so, set to today
         enrollment_date_string = enrollment_date.strftime('%Y-%m-%d')
     else:
         enrollment_date = datetime.strptime(enrollment_date_string, '%Y-%m-%d')
-    gender = request.args.get('gender', '')
+    gender = request.args.get('gender', '') # get gender from radio buttons
+    if gender == '': # check if gender is blank
+        gender = 'None' # if so, set to 'None' (string not object)
 
     # load model
     model = pickle.load(open('../pickle_files/model.p','rb'))
     # use model to make reward recommendation
     preds = make_member_predictions(model,transform_demographic_data(age,income,enrollment_date,gender))
-    best_reward = np.argmax(preds.flatten())
-    # preds=[1,2]
-    # best_reward=5
+    best_reward = np.argmax(preds.flatten()) # identify best reward id
 
     # This will render the go.html Please see that file.
     return render_template(
