@@ -59,7 +59,7 @@ def go():
     best_reward = np.argmax(preds.flatten()) # identify best reward id
 
     reward_figure = return_reward_figure(preds) # get the reward_figure based on the preds
-    id = 'figure-0' # create the id for the html id tag
+    id = ['figure-0'] # create the id for the html id tag
     # Convert the plotly figures to JSON for javascript in html template
     figureJSON = json.dumps(reward_figure, cls=plotly.utils.PlotlyJSONEncoder)
 
